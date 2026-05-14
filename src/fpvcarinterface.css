@@ -1,0 +1,239 @@
+.controls {
+  position: absolute;
+  bottom: 25px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+}
+
+.controls button {
+  width: 55px;
+  height: 55px;
+  border: none;
+  border-radius: 12px;
+  font-size: 18px;
+  cursor: pointer;
+  background: rgba(255,255,255,0.9);
+}
+
+.row {
+  display: flex;
+  gap: 10px;
+}
+
+.stop {
+  background: red;
+  color: white;
+}
+.fpv-container {
+  width: 100vw;
+  height: 100vh;
+  position: relative;
+  overflow: hidden;
+}
+
+/* BACKGROUND */
+.bg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  z-index: 0;
+}
+
+/* START SCREEN MUST BE ABOVE BACKGROUND */
+.start-screen {
+  position: absolute;
+  inset: 0;
+  z-index: 10;   /* 🔥 FIX */
+  
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+
+  background: rgba(0, 0, 0, 0.4);
+}
+.start-btn {
+  padding: 14px 30px;
+  font-size: 18px;
+  background: red;
+  color: white;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+
+  z-index: 11;
+}
+.dashboard {
+  position: absolute;
+  inset: 0;
+  z-index: 5;   /* 🔥 ensures visibility */
+}
+
+.hud {
+  position: absolute;
+  top: 15px;
+  right: 15px;
+  color: white;
+  background: rgba(0,0,0,0.5);
+  padding: 10px;
+  border-radius: 8px;
+  font-family: monospace;
+  z-index: 6;
+}
+
+.controls {
+  position: absolute;
+  bottom: 25px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  z-index: 6;
+}
+
+.controls button {
+  width: 55px;
+  height: 55px;
+  border: none;
+  border-radius: 12px;
+  font-size: 18px;
+  cursor: pointer;
+}
+
+.row {
+  display: flex;
+  gap: 10px;
+}
+
+.stop {
+  background: red;
+  color: white;
+}
+.hud {
+  color: white;
+  font-family: monospace;
+}
+.interface-container {
+  position: relative;
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+  background-color: black;
+}
+
+.live-stream {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  border: none;
+  z-index: 1; 
+  object-fit: cover; 
+}
+
+.dashboard-overlay {
+  position: relative;
+  z-index: 2; 
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  pointer-events: none;
+}
+
+
+.hud, .controls {
+  pointer-events: auto;
+}
+html, body {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden; 
+}
+/* Remove Scrollbars */
+.interface-container {
+  position: relative;
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden; 
+  background-color: #000;
+}
+
+.live-stream {
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  border: none;
+  z-index: 1;
+  object-fit: cover;
+}
+
+.dashboard-overlay {
+  position: relative;
+  z-index: 2;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 20px;
+  pointer-events: none;
+}
+
+.hud {
+  align-self: flex-end;
+  background: rgba(0, 0, 0, 0.6);
+  padding: 15px;
+  border-radius: 10px;
+  color: #fff;
+  font-family: 'Courier New', Courier, monospace;
+  pointer-events: auto;
+}
+
+/* Balaji Style Controls */
+.controls-layout {
+  align-self: center;
+  margin-bottom: 40px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  pointer-events: auto;
+}
+
+.row { display: flex; justify-content: center; gap: 10px; }
+
+.nav-btn, .stop-btn-nav {
+  width: 70px;
+  height: 70px;
+  border-radius: 18px; 
+  border: none;
+  background: rgba(255, 255, 255, 0.85);
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 24px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+}
+
+.stop-btn-nav {
+  background: #e0e0e0;
+}
+
+.stop-icon {
+  width: 25px;
+  height: 12px;
+  background: #ff4757; 
+  border-radius: 4px;
+}
+
+.nav-btn i { color: #54a0ff; font-style: normal; font-weight: bold; }
