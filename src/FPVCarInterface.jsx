@@ -9,22 +9,41 @@ export default function Dashboard() {
     console.log("Sending:", cmd);
 
     try {
+      let endpoint = "";
+
+      switch (cmd) {
+        case "FORWARD":
+          endpoint = "forward";
+          break;
+
+        case "BACKWARD":
+          endpoint = "backward";
+          break;
+
+        case "LEFT":
+          endpoint = "left";
+          break;
+
+        case "RIGHT":
+          endpoint = "right";
+          break;
+
+        case "STOP":
+          endpoint = "stop";
+          break;
+
+        default:
+          return;
+      }
+
       const response = await fetch(
-        "http://localhost:5000/control",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-         },
-         body: JSON.stringify({
-           command: cmd,
-         }),
-        }
+        `http://localhost:5000/${endpoint}`
       );
 
       const data = await response.text();
 
       console.log("Backend Response:", data);
+
     } catch (error) {
       console.error("Error:", error);
     }
@@ -32,7 +51,11 @@ export default function Dashboard() {
 
   useEffect(() => {
     const handleKeyDown = (e) => {
+
+      console.log("KEY PRESSED:", e.key);
+
       switch (e.key.toLowerCase()) {
+
         case "w":
           sendCommand("FORWARD");
           break;
@@ -49,16 +72,16 @@ export default function Dashboard() {
           sendCommand("RIGHT");
           break;
 
+        case " ":
+          sendCommand("STOP");
+          break;
+
         default:
           break;
       }
     };
 
-    window.addEventListener("keydown", (e) => {
-      console.log("KEY PRESSED:", e.key);
-
-      handleKeyDown(e);
-    });
+    window.addEventListener("keydown", handleKeyDown);
 
     return () => {
       window.removeEventListener("keydown", handleKeyDown);
