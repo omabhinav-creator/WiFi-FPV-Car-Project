@@ -1,80 +1,122 @@
-import React, { useState, useEffect } from 'react';
-import './fpvcarinterface.css';
+import axios from "axios";
 
-export default function FPVCarInterface({ onBackToDashboard }) {
-  const [speed, setSpeed] = useState(0);
-  const [battery, setBattery] = useState(100);
-  const [direction, setDirection] = useState("STOP");
-  const [isMoving, setIsMoving] = useState(false);
+function FPVCarInterface() {
 
-  // 1. Practical Speed & Battery Logic
-  useEffect(() => {
-    let interval;
-    if (isMoving && direction === "FORWARD") {
-      interval = setInterval(() => {
-        setSpeed(prev => Math.min(prev + 2, 45)); // Gradual acceleration to 45kmph
-        setBattery(prev => Math.max(prev - 0.05, 10)); // Slow battery drain
-      }, 500);
-    } else if (!isMoving) {
-      setSpeed(0);
-    }
-    return () => clearInterval(interval);
-  }, [isMoving, direction]);
+  // FORWARD
+  const moveForward = async () => {
 
-  const controlCar = (action) => {
-    if (action === "STOP") {
-      setIsMoving(false);
-      setDirection("STOP");
-    } else {
-      setDirection(action);
-      setIsMoving(true);
-    }
-    // Future: axios.get(`http://your-ngrok-url/${action.toLowerCase()}`);
+    await axios.get("http://localhost:5000/forward");
+
+    window.location.href = "/forward";
+  };
+
+  // BACKWARD
+  const moveBackward = async () => {
+
+    await axios.get("http://localhost:5000/backward");
+
+    window.location.href = "/backward";
+  };
+
+  // LEFT
+  const moveLeft = async () => {
+
+    await axios.get("http://localhost:5000/left");
+
+    window.location.href = "/left";
+  };
+
+  // RIGHT
+  const moveRight = async () => {
+
+    await axios.get("http://localhost:5000/right");
+
+    window.location.href = "/right";
+  };
+
+  // STOP
+  const stopCar = async () => {
+
+    await axios.get("http://localhost:5000/stop");
+
+    window.location.href = "/stop";
+  };
+
+  // FRONT LEFT
+  const frontLeft = async () => {
+
+    await axios.get("http://localhost:5000/frontleft");
+
+    window.location.href = "/frontleft";
+  };
+
+  // FRONT RIGHT
+  const frontRight = async () => {
+
+    await axios.get("http://localhost:5000/frontright");
+
+    window.location.href = "/frontright";
+  };
+
+  // BACK LEFT
+  const backLeft = async () => {
+
+    await axios.get("http://localhost:5000/backleft");
+
+    window.location.href = "/backleft";
+  };
+
+  // BACK RIGHT
+  const backRight = async () => {
+
+    await axios.get("http://localhost:5000/backright");
+
+    window.location.href = "/backright";
   };
 
   return (
-    <div className="interface-container">
-      {/* 2. Full Screen YouTube Background */}
-      <iframe 
-        className="live-stream"
-        src="https://www.natroad.com.au/wp-content/uploads/2023/02/Open-Road-iStock-120814631.jpg.webp" 
-        title="FPV Feed"
-        allow="autoplay; encrypted-media"
-      ></iframe>
+    <div>
 
-      <div className="dashboard-overlay">
-        {}
-        <div className="hud">
-          <p>Speed: <span>{speed} km/h</span></p>
-          <p>Battery: <span>{Math.floor(battery)}%</span></p>
-          <p>Status: <span>{direction}</span></p>
-        </div>
+      <h1>FPV Car Controller</h1>
 
-        {}
-        <div className="controls-layout">
-          <div className="row">
-            <button className="nav-btn" onMouseDown={() => controlCar("FORWARD")} onMouseUp={() => controlCar("STOP")}>
-              <i className="arrow up">↑</i>
-            </button>
-          </div>
-          <div className="row middle">
-            <button className="nav-btn" onMouseDown={() => controlCar("LEFT")} onMouseUp={() => controlCar("STOP")}>
-              <i className="arrow left">←</i>
-            </button>
-            <button className="stop-btn-nav" onClick={onBackToDashboard}>
-              <div className="stop-icon"></div>
-            </button>
-            <button className="nav-btn" onMouseDown={() => controlCar("RIGHT")} onMouseUp={() => controlCar("STOP")}>
-              <i className="arrow right">→</i>
-            </button>
-          </div>
-          <div className="row">
-            <button className="nav-btn" onMouseDown={() => controlCar("BACKWARD")} onMouseUp={() => controlCar("STOP")}>
-              <i className="arrow down">↓</i>
-            </button>
-          </div>
-        </div>
-      </div>
+      <button onClick={moveForward}>
+        Forward
+      </button>
+
+      <button onClick={moveBackward}>
+        Backward
+      </button>
+
+      <button onClick={moveLeft}>
+        Left
+      </button>
+
+      <button onClick={moveRight}>
+        Right
+      </button>
+
+      <button onClick={stopCar}>
+        Stop
+      </button>
+
+      <button onClick={frontLeft}>
+        Front Left
+      </button>
+
+      <button onClick={frontRight}>
+        Front Right
+      </button>
+
+      <button onClick={backLeft}>
+        Back Left
+      </button>
+
+      <button onClick={backRight}>
+        Back Right
+      </button>
+
     </div>
   );
 }
+
+export default FPVCarInterface;
