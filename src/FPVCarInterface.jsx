@@ -49,16 +49,16 @@ export default function Dashboard() {
           sendCommand("RIGHT");
           break;
 
-        case " ":
-          sendCommand("STOP");
-          break;
-
         default:
           break;
       }
     };
 
-    window.addEventListener("keydown", handleKeyDown);
+    window.addEventListener("keydown", (e) => {
+      console.log("KEY PRESSED:", e.key);
+
+      handleKeyDown(e);
+    });
 
     return () => {
       window.removeEventListener("keydown", handleKeyDown);
