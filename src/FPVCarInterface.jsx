@@ -8,7 +8,15 @@ export default function Dashboard() {
     console.log("Command:", cmd);
 
     // Example:
-    // fetch(`http://YOUR_ESP32_IP/${cmd}`)
+    fetch("http://localhost:5000/control", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        command: cmd,
+      }),
+    });
   };
 
   useEffect(() => {
