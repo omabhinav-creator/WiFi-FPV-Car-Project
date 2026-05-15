@@ -1,162 +1,346 @@
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 
 export default function Dashboard() {
+  const [signal, setSignal] = useState(85);
+  const [direction, setDirection] = useState("STOP");
   const [action, setAction] = useState("STOP");
 
-  const sendCommand = async (cmd) => {
-    setAction(cmd);
+ const sendCommand = async (direction) => {
 
-    console.log("Sending:", cmd);
+  setDirection(direction.toUpperCase());
 
-    try {
-      const response = await fetch(
-        "http://localhost:5000/control",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-         },
-         body: JSON.stringify({
-           command: cmd,
-         }),
-        }
-      );
+  try {
 
-      const data = await response.text();
+    const response = await fetch(
+      `http://localhost:5000/${direction}`
+    );
 
-      console.log("Backend Response:", data);
-    } catch (error) {
-      console.error("Error:", error);
+    const data = await response.text();
+
+    console.log(data);
+
+  } catch (error) {
+
+    console.log(error);
+
+  }
+};
+const getSignalStrength = () => {
+
+  if (signal > 75) {
+    return "Strong";
+  }
+
+  if (signal > 40) {
+    return "Medium";
+  }
+
+  return "Weak";
+};
+
+ useEffect(() => {
+
+  const handleKeyDown = (e) => {
+
+    switch (e.key.toLowerCase()) {
+
+      case "w":
+        sendCommand("forward");
+        break;
+
+      case "s":
+        sendCommand("backward");
+        break;
+
+      case "a":
+        sendCommand("left");
+        break;
+
+      case "d":
+        sendCommand("right");
+        break;
+
+      case " ":
+        sendCommand("stop");
+        break;
+
+      default:
+        break;
     }
   };
 
-  useEffect(() => {
-    const handleKeyDown = (e) => {
-      switch (e.key.toLowerCase()) {
-        case "w":
-          sendCommand("FORWARD");
-          break;
+  window.addEventListener("keydown", handleKeyDown);
 
-        case "s":
-          sendCommand("BACKWARD");
-          break;
+  return () => {
+    window.removeEventListener("keydown", handleKeyDown);
+  };
 
-        case "a":
-          sendCommand("LEFT");
-          break;
+}, []);
+useEffect(() => {
 
-        case "d":
-          sendCommand("RIGHT");
-          break;
+  const interval = setInterval(() => {
 
-        default:
-          break;
-      }
-    };
+    const randomSignal =
+      Math.floor(Math.random() * 100);
 
-    window.addEventListener("keydown", (e) => {
-      console.log("KEY PRESSED:", e.key);
+    setSignal(randomSignal);
 
-      handleKeyDown(e);
-    });
+  }, 3000);
 
-    return () => {
-      window.removeEventListener("keydown", handleKeyDown);
-    };
-  }, []);
+  return () => clearInterval(interval);
 
+}, []);
   return (
     <div
-      style={{
-        height: "100vh",
-        backgroundImage:
-          "url('https://images.unsplash.com/photo-1506744038136-46273834b3fb')",
-        backgroundSize: "cover",
-        backgroundPosition: "center",
-        display: "flex",
-        justifyContent: "center",
-        alignItems: "center",
-        flexDirection: "column",
-        color: "white",
-        fontFamily: "Arial",
-      }}
-    >
-      <h1
-        style={{
-          position: "absolute",
-          top: 20,
-          left: 20,
-          color: "#4dd0ff",
-        }}
-      >
-        FPV DASHBOARD
-      </h1>
+  style={{
+    height: "100vh",
+    backgroundImage:
+      "url('https://images.unsplash.com/photo-1506744038136-46273834b3fb')",
+    backgroundSize: "cover",
+    backgroundPosition: "center",
+    position: "relative",
+    overflow: "hidden",
+    color: "white",
+    fontFamily: "Arial",
+  }}
+>
 
-      <div
-        style={{
-          display: "grid",
-          gridTemplateColumns: "80px 80px 80px",
-          gridTemplateRows: "80px 80px 80px",
-          gap: "10px",
-          alignItems: "center",
-          justifyItems: "center",
-        }}
-      >
-        <div></div>
+  {/* TOP TITLE */}
+  <h1
+    style={{
+      position: "absolute",
+      top: 20,
+      left: 20,
+      color: "#160202f5",
+      fontSize: "40px",
+    }}
+  >
+    FPV DASHBOARD
+  </h1>
 
-        <div className="control-btn">↑</div>
+  {/* DIRECTION DISPLAY */}
+  <h2
+    style={{
+      position: "absolute",
+      top: 30,
+      left: "50%",
+      transform: "translateX(-50%)",
+      fontSize: "35px",
+      fontWeight: "bold",
+    }}
+  >
+    {direction}
+  </h2>
+{/* TOP RIGHT STATUS BAR */}
+<div
+  style={{
+    position: "absolute",
+    top: "20px",
+    right: "30px",
+    display: "flex",
+    gap: "12px",
+    alignItems: "center",
+    color: "white",
+    fontSize: "14px",
+    fontWeight: "bold",
+    background: "rgba(0,0,0,0.3)",
+    padding: "8px 14px",
+    borderRadius: "20px",
+    backdropFilter: "blur(10px)",
+  }}
+>
 
-        <div></div>
+  {/* SIGNAL */}
+  <div>
+    <div>
+  signal strength: {signal}% - {getSignalStrength()}
+</div>
+  </div>
 
-        <div className="control-btn">←</div>
+  {/* BATTERY */}
+  <div>
+    battery:🔋 92%
+  </div>
 
-        <div
-          style={{
-            width: "80px",
-            height: "80px",
-            background: "#ff5722",
-            borderRadius: "20px",
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-            fontWeight: "bold",
-            fontSize: "20px",
-          }}
-        >
-          STOP
-        </div>
+  {/* SPEED */}
+  <div>
+    speed:⚡ 25 km/h
+  </div>
 
-        <div className="control-btn">→</div>
+</div>
+  {/* CAMERA VIEW */}
+  <div
+    style={{
+      position: "absolute",
+      top: "15%",
+      left: "50%",
+      transform: "translateX(-50%)",
+      width: "75%",
+      height: "55%",
+      border: "4px solid rgba(15, 6, 6, 0.5)",
+      borderRadius: "25px",
+      backdropFilter: "blur(5px)",
+      display: "flex",
+      justifyContent: "center",
+      alignItems: "center",
+      fontSize: "40px",
+      fontWeight: "bold",
+      background: "rgba(0,0,0,0.2)",
+      color:"white",
+    }}
+  >
+    FPV CAMERA VIEW
+  </div>
 
-        <div></div>
+  {/* LEFT CONTROLS */}
+<div
+  style={{
+    position: "absolute",
+    bottom: "40px",
+    left: "40px",
+    display: "flex",
+    flexDirection: "column",
+    gap: "15px",
+  }}
+>
+  <button className="rect-btn" onClick={() => sendCommand("left")}>
+    ⬅ LEFT
+  </button>
+  <button className="rect-btn" onClick={() => sendCommand("right")}>
+    RIGHT ➡
+  </button>
+</div>
 
-        <div className="control-btn">↓</div>
+ {/* RIGHT CONTROLS */}
+<div
+  style={{
+    position: "absolute",
+    bottom: "40px",
+    right: "40px",
+    display: "flex",
+    flexDirection: "column",
+    gap: "15px",
+  }}
+>
+  <button className="rect-btn" onClick={() => sendCommand("FORWARD")}>
+  ▲ ACCELERATE
+</button>
 
-        <div></div>
-      </div>
+   <button className="rect-btn" onClick={() => sendCommand("BACKWARD")}>
+    ▼ REVERSE
+  </button>
+</div>
 
-      <h2 style={{ marginTop: "30px" }}>
-        Current Action: {action}
-      </h2>
+  {/* CENTER STOP CONTROL */}
+<div
+  style={{
+    
+    position: "absolute",
+    bottom: "40px",
+    left: "50%",
+    transform: "translateX(-50%)",
+  }}
+>
+  <button
+    className="stop-center"
+    onClick={() => sendCommand("stop")}
+  >
+    ⏹ STOP
+  </button>
+</div>
 
-      <div style={{ marginTop: "20px", fontSize: "18px" }}>
-        W = Forward | S = Backward | A = Left | D = Right | Space = Stop
-      </div>
+  {/* CONTROLLER STYLE */}
+  <style>{`
 
-      <style>{`
-        .control-btn {
-          width: 80px;
-          height: 80px;
-          background: rgba(0,255,255,0.5);
-          border-radius: 20px;
-          display: flex;
-          justify-content: center;
-          align-items: center;
-          font-size: 30px;
-          font-weight: bold;
-          backdrop-filter: blur(5px);
-        }
-      `}</style>
-    </div>
+.rect-btn {
+  width: 120px;
+  height: 50px;
+  border: none;
+  border-radius: 10px;
+  font-size: 14px;
+  font-weight: bold;
+  color: white;
+  cursor: pointer;
+
+  background: rgba(0, 255, 255, 0.2);
+  backdrop-filter: blur(10px);
+
+  box-shadow: 0 0 15px rgba(0, 255, 255, 0.4);
+  transition: 0.2s;
+}
+
+.rect-btn:hover {
+  transform: scale(1.05);
+  background: rgba(0, 255, 255, 0.35);
+}
+
+.rect-btn:active {
+  transform: scale(0.95);
+}
+
+/* STOP SMALL BUTTON */
+.stop-center {
+  width: 140px;
+  height: 55px;
+  border: none;
+  border-radius: 12px;
+  font-size: 16px;
+  font-weight: bold;
+  color: white;
+  cursor: pointer;
+
+  background: linear-gradient(145deg, #ff1744, #b71c1c);
+
+  box-shadow:
+    0 0 18px rgba(255, 0, 0, 0.6),
+    inset 0 0 10px rgba(255, 255, 255, 0.2);
+
+  transition: all 0.2s ease-in-out;
+}
+
+/* 🔥 hover bubble effect */
+.stop-center:hover {
+  transform: scale(1.08);
+  box-shadow:
+    0 0 28px rgba(255, 0, 0, 0.9),
+    0 0 10px rgba(255, 0, 0, 0.5);
+}
+
+/* 🎮 click press effect */
+.stop-center:active {
+  transform: scale(0.92);
+  box-shadow:
+    0 0 10px rgba(255, 0, 0, 0.5);
+}
+/* PEDALS (REAL RACING STYLE) */
+.pedal {
+  width: 160px;
+  height: 60px;
+  border: none;
+  border-radius: 12px;
+  font-size: 14px;
+  font-weight: bold;
+  color: white;
+  cursor: pointer;
+  letter-spacing: 1px;
+
+  box-shadow: 0 8px 20px rgba(0,0,0,0.4);
+  transition: 0.15s;
+}
+
+.pedal:active {
+  transform: scale(0.95);
+}
+
+.forward {
+  background: linear-gradient(145deg, #117243, #00c853);
+}
+
+.backward {
+  background: linear-gradient(145deg, #2979ff, #1565c0);
+}
+  `}</style>
+
+</div>
   );
 }
