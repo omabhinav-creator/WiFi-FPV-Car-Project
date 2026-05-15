@@ -1,101 +1,225 @@
-const express = require("express");
-const cors = require("cors");
+import { useEffect, useState } from "react";
 
-const app = express();
+export default function Dashboard() {
+  const [action, setAction] = useState("STOP");
 
-app.use(cors());
-app.use(express.json());
+  const sendCommand = async (cmd) => {
+    setAction(cmd);
 
+    console.log("Sending:", cmd);
 
-// HOME
-app.get("/", (req, res) => {
-    res.send("FPV Backend Running");
-});
+    try {
+      let endpoint = "";
 
+      switch (cmd) {
+        case "FORWARD":
+          endpoint = "forward";
+          break;
 
-// FORWARD
-app.get("/forward", (req, res) => {
+        case "BACKWARD":
+          endpoint = "backward";
+          break;
 
-    console.log("Moving forward");
+        case "LEFT":
+          endpoint = "left";
+          break;
 
-    res.send("Forward");
-});
+        case "RIGHT":
+          endpoint = "right";
+          break;
 
+        case "STOP":
+          endpoint = "stop";
+          break;
 
-// BACKWARD
-app.get("/backward", (req, res) => {
+        case "FRONT LEFT":
+          endpoint = "frontleft";
+          break;
 
-    console.log("Moving backward");
+        case "FRONT RIGHT":
+          endpoint = "frontright";
+          break;
 
-    res.send("Backward");
-});
+        case "BACK LEFT":
+          endpoint = "backleft";
+          break;
 
+        case "BACK RIGHT":
+          endpoint = "backright";
+          break;
 
-// LEFT
-app.get("/left", (req, res) => {
+        default:
+          return;
+      }
 
-    console.log("Moving left");
+      const response = await fetch(
+        `http://localhost:5000/${endpoint}`
+      );
 
-    res.send("Left");
-});
+      const data = await response.text();
 
+      console.log("Backend Response:", data);
 
-// RIGHT
-app.get("/right", (req, res) => {
+    } catch (error) {
+      console.error("Error:", error);
+    }
+  };
 
-    console.log("Moving right");
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      switch (e.key.toLowerCase()) {
+        case "w":
+          sendCommand("FORWARD");
+          break;
 
-    res.send("Right");
-});
+        case "s":
+          sendCommand("BACKWARD");
+          break;
 
+        case "a":
+          sendCommand("LEFT");
+          break;
 
-// STOP
-app.get("/stop", (req, res) => {
+        case "d":
+          sendCommand("RIGHT");
+          break;
 
-    console.log("Stopping");
+        case "q":
+          sendCommand("FRONT LEFT");
+          break;
 
-    res.send("Stop");
-});
+        case "e":
+          sendCommand("FRONT RIGHT");
+          break;
 
+        case "z":
+          sendCommand("BACK LEFT");
+          break;
 
-// FRONT LEFT
-app.get("/frontleft", (req, res) => {
+        case "c":
+          sendCommand("BACK RIGHT");
+          break;
 
-    console.log("Moving front left");
+        case " ":
+          sendCommand("STOP");
+          break;
 
-    res.send("Front Left");
-});
+        default:
+          break;
+      }
+    };
 
+    window.addEventListener("keydown", handleKeyDown);
 
-// FRONT RIGHT
-app.get("/frontright", (req, res) => {
+    return () => {
+      window.removeEventListener("keydown", handleKeyDown);
+    };
+  }, []);
 
-    console.log("Moving front right");
+  return (
+    <div
+      style={{
+        height: "100vh",
+        backgroundImage:
+          "url('https://images.unsplash.com/photo-1506744038136-46273834b3fb')",
+        backgroundSize: "cover",
+        backgroundPosition: "center",
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+        flexDirection: "column",
+        color: "white",
+        fontFamily: "Arial",
+      }}
+    >
+      <h1
+        style={{
+          position: "absolute",
+          top: 20,
+          left: 20,
+          color: "#4dd0ff",
+        }}
+      >
+        FPV DASHBOARD
+      </h1>
 
-    res.send("Front Right");
-});
+      <div
+        style={{
+          display: "grid",
+          gridTemplateColumns: "80px 80px 80px",
+          gridTemplateRows: "80px 80px 80px",
+          gap: "10px",
+          alignItems: "center",
+          justifyItems: "center",
+        }}
+      >
+        <div></div>
 
+        <div className="control-btn">↑</div>
 
-// BACK LEFT
-app.get("/backleft", (req, res) => {
+        <div></div>
 
-    console.log("Moving back left");
+        <div className="control-btn">←</div>
 
-    res.send("Back Left");
-});
+        <div
+          style={{
+            width: "80px",
+            height: "80px",
+            background: "#ff5722",
+            borderRadius: "20px",
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            fontWeight: "bold",
+            fontSize: "20px",
+          }}
+        >
+          STOP
+        </div>
 
+        <div className="control-btn">→</div>
 
-// BACK RIGHT
-app.get("/backright", (req, res) => {
+        <div></div>
 
-    console.log("Moving back right");
+        <div className="control-btn">↓</div>
 
-    res.send("Back Right");
-});
+        <div></div>
+      </div>
 
+      <h2 style={{ marginTop: "30px" }}>
+        Current Action: {action}
+      </h2>
 
-// START SERVER
-app.listen(5000, () => {
+      <div style={{ marginTop: "20px", fontSize: "18px" }}>
+        W = Forward | S = Backward | A = Left | D = Right
+      </div>
 
-    console.log("Backend running on port 5000");
-});
+      <div style={{ marginTop: "10px", fontSize: "18px" }}>
+        Q = Front Left | E = Front Right
+      </div>
+
+      <div style={{ marginTop: "10px", fontSize: "18px" }}>
+        Z = Back Left | C = Back Right
+      </div>
+
+      <div style={{ marginTop: "10px", fontSize: "18px" }}>
+        Space = Stop
+      </div>
+
+      <style>{`
+        .control-btn {
+          width: 80px;
+          height: 80px;
+          background: rgba(0,255,255,0.5);
+          border-radius: 20px;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          font-size: 30px;
+          font-weight: bold;
+          backdrop-filter: blur(5px);
+        }
+      `}</style>
+    </div>
+  );
+}
