@@ -1,122 +1,143 @@
-import axios from "axios";
+import { useEffect, useState } from "react";
 
-function FPVCarInterface() {
+export default function Dashboard() {
+  const [action, setAction] = useState("STOP");
 
-  // FORWARD
-  const moveForward = async () => {
+  const sendCommand = (cmd) => {
+    setAction(cmd);
+    console.log("Command:", cmd);
 
-    await axios.get("http://localhost:5000/forward");
-
-    window.location.href = "/forward";
+    // Example:
+    // fetch(`http://YOUR_ESP32_IP/${cmd}`)
   };
 
-  // BACKWARD
-  const moveBackward = async () => {
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      switch (e.key.toLowerCase()) {
+        case "w":
+          sendCommand("FORWARD");
+          break;
 
-    await axios.get("http://localhost:5000/backward");
+        case "s":
+          sendCommand("BACKWARD");
+          break;
 
-    window.location.href = "/backward";
-  };
+        case "a":
+          sendCommand("LEFT");
+          break;
 
-  // LEFT
-  const moveLeft = async () => {
+        case "d":
+          sendCommand("RIGHT");
+          break;
 
-    await axios.get("http://localhost:5000/left");
+        case " ":
+          sendCommand("STOP");
+          break;
 
-    window.location.href = "/left";
-  };
+        default:
+          break;
+      }
+    };
 
-  // RIGHT
-  const moveRight = async () => {
+    window.addEventListener("keydown", handleKeyDown);
 
-    await axios.get("http://localhost:5000/right");
-
-    window.location.href = "/right";
-  };
-
-  // STOP
-  const stopCar = async () => {
-
-    await axios.get("http://localhost:5000/stop");
-
-    window.location.href = "/stop";
-  };
-
-  // FRONT LEFT
-  const frontLeft = async () => {
-
-    await axios.get("http://localhost:5000/frontleft");
-
-    window.location.href = "/frontleft";
-  };
-
-  // FRONT RIGHT
-  const frontRight = async () => {
-
-    await axios.get("http://localhost:5000/frontright");
-
-    window.location.href = "/frontright";
-  };
-
-  // BACK LEFT
-  const backLeft = async () => {
-
-    await axios.get("http://localhost:5000/backleft");
-
-    window.location.href = "/backleft";
-  };
-
-  // BACK RIGHT
-  const backRight = async () => {
-
-    await axios.get("http://localhost:5000/backright");
-
-    window.location.href = "/backright";
-  };
+    return () => {
+      window.removeEventListener("keydown", handleKeyDown);
+    };
+  }, []);
 
   return (
-    <div>
+    <div
+      style={{
+        height: "100vh",
+        backgroundImage:
+          "url('https://images.unsplash.com/photo-1506744038136-46273834b3fb')",
+        backgroundSize: "cover",
+        backgroundPosition: "center",
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+        flexDirection: "column",
+        color: "white",
+        fontFamily: "Arial",
+      }}
+    >
+      <h1
+        style={{
+          position: "absolute",
+          top: 20,
+          left: 20,
+          color: "#4dd0ff",
+        }}
+      >
+        FPV DASHBOARD
+      </h1>
 
-      <h1>FPV Car Controller</h1>
+      <div
+        style={{
+          display: "grid",
+          gridTemplateColumns: "80px 80px 80px",
+          gridTemplateRows: "80px 80px 80px",
+          gap: "10px",
+          alignItems: "center",
+          justifyItems: "center",
+        }}
+      >
+        <div></div>
 
-      <button onClick={moveForward }>
-        Forward
-      </button>
+        <div className="control-btn">↑</div>
 
-      <button onClick={moveBackward }>
-        Backward
-      </button>
+        <div></div>
 
-      <button onClick={moveLeft }>
-        Left
-      </button>
+        <div className="control-btn">←</div>
 
-      <button onClick={moveRight }>
-        Right
-      </button>
+        <div
+          style={{
+            width: "80px",
+            height: "80px",
+            background: "#ff5722",
+            borderRadius: "20px",
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            fontWeight: "bold",
+            fontSize: "20px",
+          }}
+        >
+          STOP
+        </div>
 
-      <button onClick={stopCar }>
-        Stop
-      </button>
+        <div className="control-btn">→</div>
 
-      <button onClick={frontLeft }>
-        Front Left
-      </button>
+        <div></div>
 
-      <button onClick={frontRight }>
-        Front Right
-      </button>
+        <div className="control-btn">↓</div>
 
-      <button onClick={backLeft }>
-        Back Left
-      </button>
+        <div></div>
+      </div>
 
-      <button onClick={backRight }>
-        Back Right
-      </button>
+      <h2 style={{ marginTop: "30px" }}>
+        Current Action: {action}
+      </h2>
 
+      <div style={{ marginTop: "20px", fontSize: "18px" }}>
+        W = Forward | S = Backward | A = Left | D = Right | Space = Stop
+      </div>
+
+      <style>{`
+        .control-btn {
+          width: 80px;
+          height: 80px;
+          background: rgba(0,255,255,0.5);
+          border-radius: 20px;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          font-size: 30px;
+          font-weight: bold;
+          backdrop-filter: blur(5px);
+        }
+      `}</style>
     </div>
   );
 }
-
-export default FPVCarInterface;
