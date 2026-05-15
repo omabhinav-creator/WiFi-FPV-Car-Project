@@ -4,6 +4,13 @@ const cors = require("cors");
 const app = express();
 
 app.use(cors());
+app.use(express.json());
+
+
+// HOME
+app.get("/", (req, res) => {
+    res.send("FPV Backend Running");
+});
 
 
 // FORWARD
@@ -87,9 +94,8 @@ app.get("/backright", (req, res) => {
 });
 
 
-
+// START SERVER
 app.listen(5000, () => {
 
     console.log("Backend running on port 5000");
-
 });
