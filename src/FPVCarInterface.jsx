@@ -79,39 +79,39 @@ function FPVCarInterface() {
 
       <h1>FPV Car Controller</h1>
 
-      <button onClick={moveForward}>
+      <button onClick={moveForward }>
         Forward
       </button>
 
-      <button onClick={moveBackward}>
+      <button onClick={moveBackward }>
         Backward
       </button>
 
-      <button onClick={moveLeft}>
+      <button onClick={moveLeft }>
         Left
       </button>
 
-      <button onClick={moveRight}>
+      <button onClick={moveRight }>
         Right
       </button>
 
-      <button onClick={stopCar}>
+      <button onClick={stopCar }>
         Stop
       </button>
 
-      <button onClick={frontLeft}>
+      <button onClick={frontLeft }>
         Front Left
       </button>
 
-      <button onClick={frontRight}>
+      <button onClick={frontRight }>
         Front Right
       </button>
 
-      <button onClick={backLeft}>
+      <button onClick={backLeft }>
         Back Left
       </button>
 
-      <button onClick={backRight}>
+      <button onClick={backRight }>
         Back Right
       </button>
 
