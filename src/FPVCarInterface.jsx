@@ -3,20 +3,31 @@ import { useEffect, useState } from "react";
 export default function Dashboard() {
   const [action, setAction] = useState("STOP");
 
-  const sendCommand = (cmd) => {
+  const sendCommand = async (cmd) => {
     setAction(cmd);
-    console.log("Command:", cmd);
 
-    // Example:
-    fetch("http://localhost:5000/control", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        command: cmd,
-      }),
-    });
+    console.log("Sending:", cmd);
+
+    try {
+      const response = await fetch(
+        "http://localhost:5000/control",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+         },
+         body: JSON.stringify({
+           command: cmd,
+         }),
+        }
+      );
+
+      const data = await response.text();
+
+      console.log("Backend Response:", data);
+    } catch (error) {
+      console.error("Error:", error);
+    }
   };
 
   useEffect(() => {
