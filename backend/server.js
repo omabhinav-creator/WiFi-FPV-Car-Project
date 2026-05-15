@@ -1,225 +1,101 @@
-import { useEffect, useState } from "react";
+import express from "express";
+import cors from "cors";
 
-export default function Dashboard() {
-  const [action, setAction] = useState("STOP");
+const app = express();
 
-  const sendCommand = async (cmd) => {
-    setAction(cmd);
+app.use(cors());
+app.use(express.json());
 
-    console.log("Sending:", cmd);
 
-    try {
-      let endpoint = "";
+// HOME
+app.get("/", (req, res) => {
+    res.send("FPV Backend Running");
+});
 
-      switch (cmd) {
-        case "FORWARD":
-          endpoint = "forward";
-          break;
 
-        case "BACKWARD":
-          endpoint = "backward";
-          break;
+// FORWARD
+app.get("/forward", (req, res) => {
 
-        case "LEFT":
-          endpoint = "left";
-          break;
+    console.log("Moving forward");
 
-        case "RIGHT":
-          endpoint = "right";
-          break;
+    res.send("Forward");
+});
 
-        case "STOP":
-          endpoint = "stop";
-          break;
 
-        case "FRONT LEFT":
-          endpoint = "frontleft";
-          break;
+// BACKWARD
+app.get("/backward", (req, res) => {
 
-        case "FRONT RIGHT":
-          endpoint = "frontright";
-          break;
+    console.log("Moving backward");
 
-        case "BACK LEFT":
-          endpoint = "backleft";
-          break;
+    res.send("Backward");
+});
 
-        case "BACK RIGHT":
-          endpoint = "backright";
-          break;
 
-        default:
-          return;
-      }
+// LEFT
+app.get("/left", (req, res) => {
 
-      const response = await fetch(
-        `http://localhost:5000/${endpoint}`
-      );
+    console.log("Moving left");
 
-      const data = await response.text();
+    res.send("Left");
+});
 
-      console.log("Backend Response:", data);
 
-    } catch (error) {
-      console.error("Error:", error);
-    }
-  };
+// RIGHT
+app.get("/right", (req, res) => {
 
-  useEffect(() => {
-    const handleKeyDown = (e) => {
-      switch (e.key.toLowerCase()) {
-        case "w":
-          sendCommand("FORWARD");
-          break;
+    console.log("Moving right");
 
-        case "s":
-          sendCommand("BACKWARD");
-          break;
+    res.send("Right");
+});
 
-        case "a":
-          sendCommand("LEFT");
-          break;
 
-        case "d":
-          sendCommand("RIGHT");
-          break;
+// STOP
+app.get("/stop", (req, res) => {
 
-        case "q":
-          sendCommand("FRONT LEFT");
-          break;
+    console.log("Stopping");
 
-        case "e":
-          sendCommand("FRONT RIGHT");
-          break;
+    res.send("Stop");
+});
 
-        case "z":
-          sendCommand("BACK LEFT");
-          break;
 
-        case "c":
-          sendCommand("BACK RIGHT");
-          break;
+// FRONT LEFT
+app.get("/frontleft", (req, res) => {
 
-        case " ":
-          sendCommand("STOP");
-          break;
+    console.log("Moving front left");
 
-        default:
-          break;
-      }
-    };
+    res.send("Front Left");
+});
 
-    window.addEventListener("keydown", handleKeyDown);
 
-    return () => {
-      window.removeEventListener("keydown", handleKeyDown);
-    };
-  }, []);
+// FRONT RIGHT
+app.get("/frontright", (req, res) => {
 
-  return (
-    <div
-      style={{
-        height: "100vh",
-        backgroundImage:
-          "url('https://images.unsplash.com/photo-1506744038136-46273834b3fb')",
-        backgroundSize: "cover",
-        backgroundPosition: "center",
-        display: "flex",
-        justifyContent: "center",
-        alignItems: "center",
-        flexDirection: "column",
-        color: "white",
-        fontFamily: "Arial",
-      }}
-    >
-      <h1
-        style={{
-          position: "absolute",
-          top: 20,
-          left: 20,
-          color: "#4dd0ff",
-        }}
-      >
-        FPV DASHBOARD
-      </h1>
+    console.log("Moving front right");
 
-      <div
-        style={{
-          display: "grid",
-          gridTemplateColumns: "80px 80px 80px",
-          gridTemplateRows: "80px 80px 80px",
-          gap: "10px",
-          alignItems: "center",
-          justifyItems: "center",
-        }}
-      >
-        <div></div>
+    res.send("Front Right");
+});
 
-        <div className="control-btn">↑</div>
 
-        <div></div>
+// BACK LEFT
+app.get("/backleft", (req, res) => {
 
-        <div className="control-btn">←</div>
+    console.log("Moving back left");
 
-        <div
-          style={{
-            width: "80px",
-            height: "80px",
-            background: "#ff5722",
-            borderRadius: "20px",
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-            fontWeight: "bold",
-            fontSize: "20px",
-          }}
-        >
-          STOP
-        </div>
+    res.send("Back Left");
+});
 
-        <div className="control-btn">→</div>
 
-        <div></div>
+// BACK RIGHT
+app.get("/backright", (req, res) => {
 
-        <div className="control-btn">↓</div>
+    console.log("Moving back right");
 
-        <div></div>
-      </div>
+    res.send("Back Right");
+});
 
-      <h2 style={{ marginTop: "30px" }}>
-        Current Action: {action}
-      </h2>
 
-      <div style={{ marginTop: "20px", fontSize: "18px" }}>
-        W = Forward | S = Backward | A = Left | D = Right
-      </div>
+// START SERVER
+app.listen(5000, () => {
 
-      <div style={{ marginTop: "10px", fontSize: "18px" }}>
-        Q = Front Left | E = Front Right
-      </div>
-
-      <div style={{ marginTop: "10px", fontSize: "18px" }}>
-        Z = Back Left | C = Back Right
-      </div>
-
-      <div style={{ marginTop: "10px", fontSize: "18px" }}>
-        Space = Stop
-      </div>
-
-      <style>{`
-        .control-btn {
-          width: 80px;
-          height: 80px;
-          background: rgba(0,255,255,0.5);
-          border-radius: 20px;
-          display: flex;
-          justify-content: center;
-          align-items: center;
-          font-size: 30px;
-          font-weight: bold;
-          backdrop-filter: blur(5px);
-        }
-      `}</style>
-    </div>
-  );
-}
+    console.log("Backend running on port 5000");
+});
