@@ -203,10 +203,10 @@ useEffect(() => {
     gap: "15px",
   }}
 >
-  <button className="rect-btn" onClick={() => sendCommand("left")}>
+  <button className="rect-btn" onClick={() => sendCommand("LEFT")}>
     ⬅ LEFT
   </button>
-  <button className="rect-btn" onClick={() => sendCommand("right")}>
+  <button className="rect-btn" onClick={() => sendCommand("RIGHT")}>
     RIGHT ➡
   </button>
 </div>
