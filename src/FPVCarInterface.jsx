@@ -8,54 +8,49 @@ export default function Dashboard() {
 
   const audioRef = useRef(null); // 🔥 Music global component control pointer
 
-  const sendCommand = async (direction) => {
-    setDirection(direction.toUpperCase());
-    try {
-<<<<<<< HEAD
-      let endpoint = "";
+const sendCommand = async (direction) => {
+  setDirection(direction.toUpperCase());
 
-      switch (cmd) {
-        case "FORWARD":
-          endpoint = "forward";
-          break;
+  try {
+    let endpoint = "";
 
-        case "BACKWARD":
-          endpoint = "backward";
-          break;
+    switch (direction.toUpperCase()) {
+      case "FORWARD":
+        endpoint = "forward";
+        break;
 
-        case "LEFT":
-          endpoint = "left";
-          break;
+      case "BACKWARD":
+        endpoint = "backward";
+        break;
 
-        case "RIGHT":
-          endpoint = "right";
-          break;
+      case "LEFT":
+        endpoint = "left";
+        break;
 
-        case "STOP":
-          endpoint = "stop";
-          break;
+      case "RIGHT":
+        endpoint = "right";
+        break;
 
-        default:
-          return;
-      }
+      case "STOP":
+        endpoint = "stop";
+        break;
 
-      const response = await fetch(
-        `http://localhost:5000/${endpoint}`
-      );
-
-      const data = await response.text();
-
-      console.log("Backend Response:", data);
-
-=======
-      const response = await fetch(`http://localhost:5000/${direction}`);
-      const data = await response.text();
-      console.log(data);
->>>>>>> 0e6324ad9853888e7b32ca30906ed0c7802fd1ee
-    } catch (error) {
-      console.log(error);
+      default:
+        return;
     }
-  };
+
+    const response = await fetch(
+      `http://localhost:5000/${endpoint}`
+    );
+
+    const data = await response.text();
+
+    console.log("Backend Response:", data);
+
+  } catch (error) {
+    console.log(error);
+  }
+};
 
   const getSignalStrength = () => {
     if (signal > 75) return "Strong";
@@ -64,62 +59,47 @@ export default function Dashboard() {
   };
 
   // 1. KEYBOARD CONTROLS LISTENERS
-  useEffect(() => {
-    const handleKeyDown = (e) => {
-<<<<<<< HEAD
+ useEffect(() => {
+  const handleKeyDown = (e) => {
 
-      console.log("KEY PRESSED:", e.key);
+    console.log("KEY PRESSED:", e.key);
 
-      switch (e.key.toLowerCase()) {
+    switch (e.key.toLowerCase()) {
+      case "w":
+      case "arrowup":
+        sendCommand("FORWARD");
+        break;
 
-=======
-      switch (e.key) {
->>>>>>> 0e6324ad9853888e7b32ca30906ed0c7802fd1ee
-        case "w":
-        case "W":
-        case "ArrowUp":
-          sendCommand("forward");
-          break;
-        case "s":
-        case "S":
-        case "ArrowDown":
-          sendCommand("backward");
-          break;
-        case "a":
-        case "A":
-        case "ArrowLeft":
-          sendCommand("left");
-          break;
-        case "d":
-        case "D":
-        case "ArrowRight":
-          sendCommand("right");
-          break;
-        case " ":
-          sendCommand("stop");
-          break;
-<<<<<<< HEAD
+      case "s":
+      case "arrowdown":
+        sendCommand("BACKWARD");
+        break;
 
-        case " ":
-          sendCommand("STOP");
-          break;
+      case "a":
+      case "arrowleft":
+        sendCommand("LEFT");
+        break;
 
-=======
->>>>>>> 0e6324ad9853888e7b32ca30906ed0c7802fd1ee
-        default:
-          break;
-      }
-    };
+      case "d":
+      case "arrowright":
+        sendCommand("RIGHT");
+        break;
 
-    window.addEventListener("keydown", handleKeyDown);
-<<<<<<< HEAD
+      case " ":
+        sendCommand("STOP");
+        break;
 
-=======
->>>>>>> 0e6324ad9853888e7b32ca30906ed0c7802fd1ee
-    return () => {
-      window.removeEventListener("keydown", handleKeyDown);
-    };
-  }, []);
+      default:
+        break;
+    }
+  };
+
+  window.addEventListener("keydown", handleKeyDown);
+
+  return () => {
+    window.removeEventListener("keydown", handleKeyDown);
+  };
+}, []);
 
   // 2. CINEMATIC BGM MUSIC LIFECYCLE USING REF MATCHING
   useEffect(() => {
