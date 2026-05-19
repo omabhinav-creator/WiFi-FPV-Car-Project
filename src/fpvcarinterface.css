@@ -199,7 +199,7 @@ html, body {
   pointer-events: auto;
 }
 
-/* Balaji Style Controls */
+/* Style Controls */
 .controls-layout {
   align-self: center;
   margin-bottom: 40px;
@@ -235,5 +235,4 @@ html, body {
   background: #ff4757; 
   border-radius: 4px;
 }
-
 .nav-btn i { color: #54a0ff; font-style: normal; font-weight: bold; }
